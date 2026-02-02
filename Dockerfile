@@ -1,10 +1,13 @@
 FROM n8nio/n8n:latest
 
-# Set working directory
+# Reduce memory footprint
+ENV NODE_OPTIONS="--max-old-space-size=460"
+ENV N8N_RUNNERS_DISABLED=true
+ENV EXECUTIONS_PROCESS=main
+ENV N8N_DISABLE_PRODUCTION_MAIN_PROCESS=false
+
 WORKDIR /home/node
 
-# Expose port
 EXPOSE 5678
 
-# Use the default n8n entrypoint
 CMD ["n8n"]
