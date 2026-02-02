@@ -1,13 +1,13 @@
 services:
   - type: web
-    name: n8n-service
+    name: n8n-free
     env: docker
     dockerfilePath: ./Dockerfile
-    region: oregon # or your preferred region
-    plan: starter # minimum recommended
+    plan: free  # ← Free tier
     healthCheckPath: /healthz
+    autoDeploy: true
     envVars:
-      # Database Configuration (Supabase)
+      # Database (Supabase Free)
       - key: DB_TYPE
         value: postgresdb
       - key: DB_POSTGRESDB_HOST
@@ -23,7 +23,7 @@ services:
       - key: DB_POSTGRESDB_SSL_ENABLED
         value: true
       
-      # n8n Configuration
+      # n8n Minimal Config
       - key: N8N_HOST
         sync: false
       - key: N8N_PORT
@@ -32,13 +32,29 @@ services:
         value: https
       - key: WEBHOOK_URL
         sync: false
-      - key: GENERIC_TIMEZONE
-        value: Asia/Manila
-      
-      # Security
       - key: N8N_ENCRYPTION_KEY
         generateValue: true
       
-      # Optional Performance
+      # Memory Optimization (Critical for Free Tier!)
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=460
       - key: EXECUTIONS_PROCESS
         value: main
+      - key: N8N_RUNNERS_DISABLED
+        value: true
+      
+      # Execution Settings
+      - key: EXECUTIONS_DATA_SAVE_ON_ERROR
+        value: none
+      - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
+        value: none
+      - key: EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS
+        value: false
+      
+      # Disable Heavy Features
+      - key: N8N_DIAGNOSTICS_ENABLED
+        value: false
+      - key: N8N_VERSION_NOTIFICATIONS_ENABLED
+        value: false
+      - key: N8N_TEMPLATES_ENABLED
+        value: false
